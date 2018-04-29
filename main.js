@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 const client = new SpeechClient({ keyFilename: 'gcloud.pass.json' });
 const notifier = require('node-notifier');
 
+const { textToCode } = require('./text-to-code.js');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
 
@@ -34,14 +36,16 @@ app.get('/', (req, res) => {
         message: 'Recording finished'
       });
       record.stop();
-      res.json({ data });
+      res.json(textToCode({
+        text: data.results[0].alternatives[0].transcript
+      }));
       res.end();
     });
 
-      notifier.notify({
-        title: 'speech-commands',
-        message: 'Recording started'
-      });
+  notifier.notify({
+    title: 'speech-commands',
+    message: 'Recording started'
+  });
   record.start({ sampleRate: sampleRateHertz })
   .on('error', console.error)
   .pipe(recognizeStream);
