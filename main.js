@@ -7,6 +7,7 @@ const app = express();
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended : true}));
 
 const encoding = 'LINEAR16';
 const sampleRateHertz = 16000;
@@ -20,24 +21,18 @@ const request = {
   interimResults: false,
 };
 
-app.post('/', (req, res) => {
+app.get('/', (req, res) => {
   const client = new SpeechClient({ keyFilename: 'gcloud.pass.json' });
   const recognizeStream = client
     .streamingRecognize(request)
     .on('error', console.error)
-    .on('data', data =>
-      process.stdout.write(
-        data.results[0] && data.results[0].alternatives[0]
-          ? `Transcription: ${data.results[0].alternatives[0].transcript}\n`
-          : `\n\nReached transcription time limit, press Ctrl+C\n`
-      )
-    );
+    .on('data', data => {
+      res.json({ data });
+    });
 
   record.start({ sampleRate: sampleRateHertz })
   .on('error', console.error)
   .pipe(recognizeStream);
-
-  res.end();
 });
 
 app.listen(3000, () => console.log('Listening on port 3000!'))
