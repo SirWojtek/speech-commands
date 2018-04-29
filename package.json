@@ -1,0 +1,14 @@
+{
+  "name": "speech-commands",
+  "version": "0.0.1",
+  "main": "main.js",
+  "author": "SirWojtek <momatoku@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "@google-cloud/speech": "^1.5.0",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "node-record-lpcm16": "^0.3.0"
+  }
+}
