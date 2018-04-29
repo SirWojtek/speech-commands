@@ -5,6 +5,7 @@ const record = require('node-record-lpcm16');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const client = new SpeechClient({ keyFilename: 'gcloud.pass.json' });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
@@ -17,17 +18,19 @@ const request = {
     encoding: encoding,
     sampleRateHertz: sampleRateHertz,
     languageCode: languageCode,
+    model: 'command_and_search'
   },
   interimResults: false,
 };
 
 app.get('/', (req, res) => {
-  const client = new SpeechClient({ keyFilename: 'gcloud.pass.json' });
   const recognizeStream = client
     .streamingRecognize(request)
     .on('error', console.error)
     .on('data', data => {
+      record.stop();
       res.json({ data });
+      res.end();
     });
 
   record.start({ sampleRate: sampleRateHertz })
