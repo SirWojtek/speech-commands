@@ -6,6 +6,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const client = new SpeechClient({ keyFilename: 'gcloud.pass.json' });
+const notifier = require('node-notifier');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
@@ -28,11 +29,19 @@ app.get('/', (req, res) => {
     .streamingRecognize(request)
     .on('error', console.error)
     .on('data', data => {
+      notifier.notify({
+        title: 'speech-commands',
+        message: 'Recording finished'
+      });
       record.stop();
       res.json({ data });
       res.end();
     });
 
+      notifier.notify({
+        title: 'speech-commands',
+        message: 'Recording started'
+      });
   record.start({ sampleRate: sampleRateHertz })
   .on('error', console.error)
   .pipe(recognizeStream);
