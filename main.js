@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
 
 const encoding = 'LINEAR16';
-const sampleRateHertz = 16000;
+const sampleRateHertz = 24000;
 const languageCode = 'en-US';
 const request = {
   config: {
