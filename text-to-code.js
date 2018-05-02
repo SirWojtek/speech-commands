@@ -6,9 +6,8 @@ signs = [
   { regex: /semicolon/gi, value: ';' },
 ];
 
-
 module.exports = {
-  textToCode: ({ text }) => {
+  textToCode: ({ text, context }) => {
     const result = text.slice(0);
     signs.forEach(({ regex, value }) => result.replace(regex, value));
     return result.toLowerCase().replace(/ /g, '');

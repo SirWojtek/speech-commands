@@ -26,7 +26,7 @@ const request = {
   interimResults: false,
 };
 
-app.get('/', (req, res) => {
+app.post('/', (req, res) => {
   const recognizeStream = client
     .streamingRecognize(request)
     .on('error', console.error)
@@ -37,7 +37,8 @@ app.get('/', (req, res) => {
       });
       record.stop();
       res.json(textToCode({
-        text: data.results[0].alternatives[0].transcript
+        text: data.results[0].alternatives[0].transcript,
+        context: req.body.context,
       }));
       res.end();
     });
