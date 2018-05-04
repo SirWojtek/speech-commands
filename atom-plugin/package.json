@@ -1,0 +1,20 @@
+{
+  "name": "speech-commands",
+  "main": "./lib/speech-commands",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "keywords": [],
+  "activationCommands": {
+    "atom-workspace": "speech-commands:toggle"
+  },
+  "repository": "https://github.com/atom/speech-commands",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.10",
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2"
+  }
+}
