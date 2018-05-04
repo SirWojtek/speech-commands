@@ -1,4 +1,5 @@
 const natural = require('natural');
+const _ = require('lodash');
 
 signs = [
   { regex: /dot/gi, value: '.' },
@@ -12,28 +13,32 @@ module.exports = {
     const validContext = context
       .filter(Boolean)
       .filter(word => word.length > 2);
-    let result = text.slice(0);
 
-    signs.forEach(({ regex, value }) => result.replace(regex, value));
+    const textCopy = text.slice(0);
+    const textWithoutSigns = signs.map(({ regex, value }) => textCopy.replace(regex, value));
+    const lowerCaseTextWithoutSpaces = textWithoutSigns.toLowerCase().replace(/ /g, '');
 
-    result = result.toLowerCase().replace(/ /g, '');
-
-    const contextMatches = validContext.map(contextWord => ({
-        contextWord,
-        result: natural.LevenshteinDistance(contextWord.toLowerCase(), result, { search: true })
-    }))
-    .filter(match => match.result.substring.length > 2)
-    .filter(match => match.result.distance < 2)
-    .sort(match => match.result.distance);
-
-    // TODO: sort first by distance then by match length
+    const contextMatches = getMatchingContext(context, lowerCaseTextWithoutSpaces);
 
     console.log(contextMatches);
 
-    if (contextMatches.length) {
-      result = result.replace(contextMatches[0].result.substring, contextMatches[0].contextWord);
-    }
-
-    return result;
+    return contextMatches.length ?
+      lowerCaseTextWithoutSpaces.replace(contextMatches[0].substring, contextMatches[0].contextWord) :
+      lowerCaseTextWithoutSpaces;
   }
+}
+
+function getMatchingContext(context, translation) {
+  const unsortedContext = context
+    .map(contextWord => ({
+        contextWord,
+        ...natural.LevenshteinDistance(contextWord.toLowerCase(), translation, { search: true })
+    }))
+    .filter(match => match.substring.length > 2)
+    .filter(match => match.distance < 2);
+
+  return _.sortBy(unsortedContext, [
+    'distance',
+    (context) => - context.substring.length
+  ]);
 }
