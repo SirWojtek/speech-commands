@@ -36,10 +36,12 @@ app.post('/', (req, res) => {
         message: 'Recording finished'
       });
       record.stop();
-      res.json(textToCode({
-        text: data.results[0].alternatives[0].transcript,
-        context: req.body.context,
-      }));
+      res.json({
+        code: textToCode({
+          text: data.results[0].alternatives[0].transcript,
+          context: req.body.context,
+        })
+      })
       res.end();
     });
 

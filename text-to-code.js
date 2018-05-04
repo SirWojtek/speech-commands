@@ -14,8 +14,8 @@ module.exports = {
       .filter(Boolean)
       .filter(word => word.length > 2);
 
-    const textCopy = text.slice(0);
-    const textWithoutSigns = signs.map(({ regex, value }) => textCopy.replace(regex, value));
+    const textWithoutSigns = text.slice(0);
+    signs.map(({ regex, value }) => textWithoutSigns.replace(regex, value));
     const lowerCaseTextWithoutSpaces = textWithoutSigns.toLowerCase().replace(/ /g, '');
 
     const contextMatches = getMatchingContext(context, lowerCaseTextWithoutSpaces);
